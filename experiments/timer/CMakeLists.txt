@@ -1,2 +1,2 @@
 project(timer LANGUAGES CXX)
-add_executable(timer main.cpp)
+add_executable(timer timer.cpp)
