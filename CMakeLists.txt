@@ -4,3 +4,4 @@ project(cpp_experiments LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(experiments/timer)
+add_subdirectory(experiments/scheduler)
