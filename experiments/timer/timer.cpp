@@ -5,8 +5,8 @@
 
 namespace cno = std::chrono;
 
-using SteadyClock = std::chrono::steady_clock;
-using TimePoint = cno::time_point<SteadyClock>;
+using Clock = std::chrono::steady_clock;
+using TimePoint = cno::time_point<Clock>;
 using BigNum = unsigned long long;
 
 class Timer {
@@ -15,15 +15,15 @@ public:
     ~Timer() { }
 
     void reset() {
-        time = SteadyClock::now();
+        time = Clock::now();
     }
 
     template<typename t>
     double elapsed() {
-        return cno::duration_cast<t>(SteadyClock::now() - time).count();
+        return cno::duration_cast<t>(Clock::now() - time).count();
     }
 private:
-    cno::time_point<SteadyClock> time{SteadyClock::now()};
+    cno::time_point<Clock> time{Clock::now()};
 };
 
 constexpr BigNum factorial_n(BigNum n) {
