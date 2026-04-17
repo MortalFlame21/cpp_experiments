@@ -5,3 +5,4 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(experiments/timer)
 add_subdirectory(experiments/scheduler)
+add_subdirectory(experiments/world_clock)
