@@ -1,19 +1,40 @@
 #include <chrono>
 #include <iostream>
+#include <thread>
+#include <vector>
+#include <string>
+#include <array>
+#include <algorithm>
+#include <ranges>
 
-namespace cno = std::chrono;
+namespace chrono = std::chrono;
 using Clock = std::chrono::system_clock;
 
-int main() {
-    cno::zoned_time zone_curr(cno::current_zone(), Clock::now());
-    cno::zoned_time zone_au(cno::locate_zone("Australia/Melbourne"), Clock::now());
-    cno::zoned_time zone_ph(cno::locate_zone("Asia/Manila"), Clock::now());
-    cno::zoned_time zone_ny(cno::locate_zone("America/Detroit"), Clock::now());
-    cno::zoned_time zone_jp(cno::locate_zone("Japan"), Clock::now());
+void print_zone(const chrono::time_zone* tz, const Clock::time_point& tp) {
+    std::cout << tz->name() << " - " << tz->to_local(tp) << '\n';
+}
 
-    std::cout << zone_curr.get_local_time() << '\n';
-    std::cout << zone_ny.get_local_time() << '\n';
-    std::cout << zone_au.get_local_time() << '\n';
-    std::cout << zone_ph.get_local_time() << '\n';
-    std::cout << zone_jp.get_local_time() << '\n';
+std::vector<const chrono::time_zone*> get_tz_vec(const chrono::tzdb& tzdb) {
+    constexpr auto time_zones{std::to_array({"Australia/Melbourne", "Asia/Manila",
+                                             "Japan", "America/New_York"})};
+
+    std::vector<const chrono::time_zone*> tz_vec(time_zones.size());
+    std::ranges::transform(time_zones, tz_vec.begin(),
+        [&](const auto& tz) { return tzdb.locate_zone(tz); });
+
+    return tz_vec;
+}
+
+int main() {
+    const auto tz_vec{get_tz_vec(chrono::get_tzdb())};
+
+    while (true) {
+        const auto now{Clock::now()};
+
+        for (const auto& tz : tz_vec)
+            print_zone(tz, now);
+        std::cout << "\x1B[" << tz_vec.size() << "A" << std::flush;
+
+        std::this_thread::sleep_for(chrono::seconds(1));
+    }
 }
