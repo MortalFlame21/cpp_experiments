@@ -27,8 +27,8 @@ int main() {
         std::this_thread::sleep_for(chrono::milliseconds(300));
     }
 
-    auto t0{Clock::now()};
     std::cout << "\rGo! (Press [ENTER]).\n";
+    auto t0{Clock::now()};
     std::cin.get();
     auto t1{Clock::now()};
     auto reaction{t1 - t0};
