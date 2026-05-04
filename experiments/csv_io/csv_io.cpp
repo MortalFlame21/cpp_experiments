@@ -17,13 +17,11 @@ std::istream& operator>>(std::istream& is, CsvEntry& e) {
     while (is.get(c) && c != ',')
         std::get<0>(e) += c;
 
-    if (!(is >> std::get<1>(e))) {
-        is.setstate(std::ios_base::badbit);
-    }
+    if (!(is >> std::get<1>(e)))
+        is.setstate(std::ios_base::failbit);
 
-    if (!(is >> c >> std::get<2>(e)) || c != ',') {
-        is.setstate(std::ios_base::badbit);
-    }
+    if (!(is >> c >> std::get<2>(e)) || c != ',')
+        is.setstate(std::ios_base::failbit);
 
     return is;
 }
@@ -34,6 +32,7 @@ int main() {
                 "\t(CTRL+d to complete):\n";
     for (CsvEntry e{}; std::cin >> e;)
         entries.push_back(e);
+    if (std::cin.eof() && std::cin) std::cin.clear();
 
     if (!std::cin) {
         std::cerr << "ERROR: An error occurred when taking io.\n";
